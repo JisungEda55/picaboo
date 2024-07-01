@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "title": "demo, 이상과 일상 사이.",
+    "title": "[테스트]이상과 일상 사이.",
     "imageUrl": "https://cdn.motorgraph.com/news/photo/202308/32522_102007_2615.jpg"
   },
   {
     "id": 2,
-    "title": "demo, 내 드림카의 환생.",
+    "title": "[테스트]내 드림카의 환생.",
     "imageUrl": "https://media.autoexpress.co.uk/image/private/s--X-WVjvBW--/f_auto,t_content-image-full-desktop@1/v1675336320/autoexpress/2023/02/Hyundai%20Ioniq%205%20Namsan%20Edition%20-3.jpg"
   },
   {
     "id": 3,
-    "title": "demo, Rivian(리비안)의 새로운 소비자 경험환경.",
+    "title": "[테스트]Rivian(리비안)의 새로운 소비자 경험환경.",
     "imageUrl": "https://cdn2.unrealengine.com/rivian-twitter-v1-1600x900-66ac47070610.jpg"
   },
   {
