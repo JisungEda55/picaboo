@@ -1,4 +1,4 @@
-# PiCaBoo - Pick.Car.Book
+# PiCaBoo - Pick.Car.Boot
 
 ![PICABOO](https://www.google.co.kr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png)
 
