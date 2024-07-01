@@ -62,6 +62,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
     .episode-list li:hover {
       transform: translateY(-5px);
@@ -198,25 +199,25 @@
   </div>
 
   <script>
-    // JSON 데이터를 가져오는 예시 (fetch API 사용)
-    fetch('https://my-json-server.typicode.com/JisungEda55/picaboo')
-      .then(response => response.json())
-      .then(data => {
-        // "id" 기준으로 내림차순 정렬
-        data.sort((a, b) => b.id - a.id);
-        
-        const episodeList = document.getElementById('episode-list');
-        // 정렬된 데이터 사용
-        data.forEach(episode => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <img src="${episode.imageUrl}" alt="${episode.title} 이미지">
-            <h3>${episode.title}</h3>
-          `;
-          episodeList.appendChild(li);
-        });
-      })
-      .catch(error => console.error('에피소드 데이터를 가져오기에 실패했어요. 새로고침 해주세요!', error 404));
+    const episodes = [
+      { id: 4, title: "ep.1 KG 모빌리티의 마지막 부활 기회.", imageUrl: "https://i.namu.wiki/i/iOq5FF9VWBYkpNhF-6oeWDHlMg-FrrxpKCv24e18Ih33X012Kjhtv3-4J7egjUX1LKuvk2SwOir4-GI6U2fwo0RrMoE8TarOkKpyGsxOWMHXMpwTxyuvR1GTP35ncJNfj6O_Lu2lG7XyvchjJL0MAA.webp", clickUrl: "https://jisungeda55.github.io/picaboo.letter" },
+      { id: 3, title: "[테스트]Rivian(리비안)의 새로운 소비자 경험환경.", imageUrl: "https://cdn2.unrealengine.com/rivian-twitter-v1-1600x900-66ac47070610.jpg"},
+      { id: 2, title: "[테스트]내 드림카의 환생.", imageUrl: "https://media.autoexpress.co.uk/image/private/s--X-WVjvBW--/f_auto,t_content-image-full-desktop@1/v1675336320/autoexpress/2023/02/Hyundai%20Ioniq%205%20Namsan%20Edition%20-3.jpg"},
+      { id: 1, title: "[테스트]이상과 일상 사이.", imageUrl: "https://cdn.motorgraph.com/news/photo/202308/32522_102007_2615.jpg"}
+      // 기타 episode들 추가
+    ];
+
+    const episodeList = document.getElementById('episode-list');
+    episodes.forEach(episode => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <a href="${episode.clickUrl}" target="_blank">
+          <img src="${episode.imageUrl}" alt="${episode.title} 이미지">
+          <h3>${episode.title}</h3>
+        </a>
+      `;
+      episodeList.appendChild(li);
+    });
   </script>
 </body>
 </html>
