@@ -4,12 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pick.Car.Boot - 피카부!</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
+    @font-face {
+      font-family: 'LINESeedKR-Bd';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
+
     /* 기본 스타일은 모바일 레이아웃으로 설정 */
     body {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'LINESeedKR-Bd', sans-serif; /* 기본 폰트를 LINESeedKR-Bd로 설정 */
       line-height: 1.6;
       margin: 20px;
       background-color: #fc3c1c;
@@ -28,13 +34,13 @@
       margin-bottom: 10px;
       margin-top: 5px;
       font-weight: 800;
-      color: #ffffff; /* 흰색 */
+      color: #ffffff;
     }
     .author {
       font-size: 1.2em;
       font-weight: 600;
       text-align: right;
-      color: #ffffff; /* 흰색 */
+      color: #ffffff;
     }
     h2 {
       font-size: 1.8em;
@@ -53,6 +59,8 @@
       padding: 0;
     }
     .episode-list li {
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
       margin-bottom: 30px;
       display: flex;
       flex-direction: column;
@@ -61,8 +69,10 @@
       background-color: #f2f2f7;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
       cursor: pointer;
+    }
+    .episode-list li.visible {
+      opacity: 1;
     }
     .episode-list li:hover {
       transform: translateY(-5px);
@@ -79,33 +89,29 @@
       color: #010101;
       text-align: left;
       width: 100%;
-      padding: 0 15px; /* 좌우 여백 추가 */
+      padding: 0 15px;
     }
-    
-    /* 로딩 문구 스타일 */
-.loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* 배경색을 반투명 검정으로 설정 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff; /* 텍스트 색상을 흰색으로 설정 */
-  font-size: 1.5em;
-  font-weight: bold;
-  z-index: 9999;
-}
-    
-    /* 730px 이상 화면에서의 스타일 설정 */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 1.5em;
+      font-weight: bold;
+      z-index: 9999;
+    }
     @media (min-width: 731px) {
       body {
-        margin: 0 auto; /* 모든 콘텐츠를 중앙에 정렬 */
-        max-width: 730px; /* 최대 너비 제한 수정 */
-        background-color: #fc3c1c; /* 배경색은 유지 */
-        padding: 20px; /* 여백 추가 */
+        margin: 0 auto;
+        max-width: 730px;
+        background-color: #fc3c1c;
+        padding: 20px;
       }
       .header {
         font-size: 1.5em;
@@ -137,7 +143,7 @@
         background-color: #f2f2f7;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+        transition: opacity 0.5s ease-in;
       }
       .episode-list img {
         max-width: 100%;
@@ -151,16 +157,14 @@
         color: #010101;
         text-align: left;
         width: 100%;
-        padding: 0 15px; /* 좌우 여백 추가 */
+        padding: 0 15px;
       }
     }
-
-    /* 385px 이하 화면에서의 스타일 설정 */
     @media (max-width: 385px) {
       body {
-        margin: 0 auto; /* 모든 콘텐츠를 중앙에 정렬 */
-        padding: 15px; /* 여백 추가 */
-        background-color: #fc3c1c; /* 배경색은 유지 */
+        margin: 0 auto;
+        padding: 15px;
+        background-color: #fc3c1c;
       }
       .header {
         font-size: 1.2em;
@@ -196,7 +200,7 @@
         color: #010101;
         text-align: left;
         width: 100%;
-        padding: 0 15px; /* 좌우 여백 추가 */
+        padding: 0 15px;
       }
     }
   </style>
@@ -228,32 +232,59 @@
     const episodeList = document.getElementById('episode-list');
     const loading = document.getElementById('loading');
 
-    // 이미지 로딩을 추적하기 위한 변수
-    let imagesLoaded = 0;
-    const totalImages = episodes.length;
+    let currentIndex = 0;
+    const itemsPerPage = 3;
 
-    // 모든 이미지를 로드하고 나서 로딩 문구를 제거하는 함수
+    function loadEpisodes() {
+      const endIndex = Math.min(currentIndex + itemsPerPage, episodes.length);
+      for (let i = currentIndex; i < endIndex; i++) {
+        const episode = episodes[i];
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <a href="${episode.clickUrl || '#'}" target="_blank">
+            <img src="${episode.imageUrl}" alt="${episode.title} 이미지" onload="checkAllImagesLoaded()" onerror="checkAllImagesLoaded()">
+            <h3>${episode.title}</h3>
+          </a>
+        `;
+        episodeList.appendChild(li);
+
+        // 다음 게시물에 visible 클래스 추가 (부드럽게 나타나도록)
+        setTimeout(() => {
+          li.classList.add('visible');
+        }, 10); // 작은 지연 후 클래스 추가
+      }
+      currentIndex = endIndex;
+
+      if (currentIndex >= episodes.length) {
+        window.removeEventListener('scroll', handleScroll);
+      }
+    }
+
+    function handleScroll() {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (scrollPosition + 100 >= documentHeight) {
+        loadEpisodes();
+      }
+    }
+
     function checkAllImagesLoaded() {
-      imagesLoaded += 1;
-      if (imagesLoaded === totalImages) {
+      const images = document.querySelectorAll('.episode-list img');
+      const loadedImages = Array.from(images).filter(img => img.complete);
+      if (loadedImages.length === images.length) {
         loading.style.display = 'none';
       }
     }
 
-    // 각 에피소드 항목을 추가
-    episodes.forEach(episode => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <a href="${episode.clickUrl || '#'}" target="_blank">
-          <img src="${episode.imageUrl}" alt="${episode.title} 이미지" onload="checkAllImagesLoaded()" onerror="checkAllImagesLoaded()">
-          <h3>${episode.title}</h3>
-        </a>
-      `;
-      episodeList.appendChild(li);
-    });
+    // 초기 로딩 시 첫 3개의 게시물 로드
+    loadEpisodes();
+
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener('scroll', handleScroll);
 
     // 이미지가 없거나 클릭 URL이 없는 경우에도 로딩 문구를 숨깁니다.
-    if (totalImages === 0) {
+    if (episodes.length === 0) {
       loading.style.display = 'none';
     }
   </script>
