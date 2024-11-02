@@ -20,6 +20,10 @@
       margin: 20px;
       background-color: #fc3c1c;
       color: #010101;
+      overflow-y: scroll;
+    }
+    ::-webkit-scrollbar {
+      display: none;
     }
     .header {
       font-weight: 700;
@@ -60,7 +64,8 @@
     }
     .episode-list li {
       opacity: 0;
-      transition: opacity 0.5s ease-in;
+      transform: translateY(20px);
+      transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
       margin-bottom: 30px;
       display: flex;
       flex-direction: column;
@@ -70,12 +75,15 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       cursor: pointer;
+      will-change: opacity, transform;
     }
     .episode-list li.visible {
       opacity: 1;
+      transform: translateY(0);
     }
     .episode-list li:hover {
       transform: translateY(-5px);
+      transition: transform 0.3s ease;
     }
     .episode-list img {
       max-width: 100%;
@@ -90,6 +98,9 @@
       text-align: left;
       width: 100%;
       padding: 0 15px;
+    }
+    a {
+      text-decoration: none;
     }
     .loading {
       position: fixed;
@@ -143,7 +154,7 @@
         background-color: #f2f2f7;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: opacity 0.5s ease-in;
+        transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
       }
       .episode-list img {
         max-width: 100%;
@@ -224,8 +235,8 @@
     const episodes = [
       { id: 4, title: "ep.1 전기차, KG 모빌리티의 마지막 기회.", imageUrl: "https://i.postimg.cc/6Q2G6gFm/2024-08-06-001632.png", clickUrl: "https://jisungeda55.github.io/picabooletter/ep1" },
       { id: 3, title: "Pick.Car.Boot! Info.", imageUrl: "https://i.postimg.cc/vBHV5TKc/344541861-9680427b-327e-4476-9ea2-c0040d8de7b2.png", clickUrl: "https://jisungeda55.github.io/picabooletter" },
-      { id: 2, title: "[테스트]Rivian(리비안)의 새로운 소비자 경험환경.", imageUrl: "https://cdn2.unrealengine.com/rivian-twitter-v1-1600x900-66ac47070610.jpg"},
-      { id: 1, title: "[테스트]내 드림카의 환생.", imageUrl: "https://media.autoexpress.co.uk/image/private/s--X-WVjvBW--/f_auto,t_content-image-full-desktop@1/v1675336320/autoexpress/2023/02/Hyundai%20Ioniq%205%20Namsan%20Edition%20-3.jpg"}
+      { id: 2, title: "[테스트]Rivian(리비안)의 새로운 소비자 경험환경.", imageUrl: "https://cdn2.unrealengine.com/rivian-twitter-v1-1600x900-66ac47070610.jpg", clickUrl: "https://jisungeda55.github.io/picabooletter"},
+      { id: 1, title: "[테스트]내 드림카의 환생.", imageUrl: "https://media.autoexpress.co.uk/image/private/s--X-WVjvBW--/f_auto,t_content-image-full-desktop@1/v1675336320/autoexpress/2023/02/Hyundai%20Ioniq%205%20Namsan%20Edition%20-3.jpg", clickUrl: "https://jisungeda55.github.io/picabooletter"}
       // 기타 episode들 추가
     ];
 
