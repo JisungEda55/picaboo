@@ -136,16 +136,17 @@
         const episode = episodes[i];
         const li = createEpisodeElement(episode);
         episodeList.appendChild(li);
-        observer.observe(li);
+        observer.observe(li); // IntersectionObserver로 요소를 감시
       }
       currentIndex = endIndex;
     }
 
-    const observer = new IntersectionObserver((entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          observer.unobserve(entry.target); // 가시화된 요소는 더 이상 감시하지 않음
+          if (currentIndex < episodes.length) loadEpisodes(); // 요소가 보일 때마다 새로운 에피소드 로드
         }
       });
     }, { threshold: 0.1 });
